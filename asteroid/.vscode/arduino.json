@@ -1,0 +1,6 @@
+{
+    "board": "gamebuino:samd:gamebuino_meta_native",
+    "port": "COM1",
+    "sketch": "asteroid.ino",
+    "output": "./build"
+}
