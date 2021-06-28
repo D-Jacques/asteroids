@@ -3,17 +3,18 @@
 int ship_pos_x = 15;
 int ship_pos_y = 35;
 
-int ast_pos_x = gb.display.width();
+int ast_pos_x = random(gb.display.width(), (gb.display.width() +5));
 int ast_pos_y = random(6, (gb.display.height()-5));
 int ast_size = random(5, 7);
 
-int asteroids[2][1];
+int asteroids[2][2];
 int compteur;
 void setup()
 {
     gb.begin();
     for(int i = 0; i < 2; i++){
-      asteroids[i][0] = random(6, (gb.display.height()-5));
+      asteroids[i][0] = random(gb.display.width(), (gb.display.width() +5));
+      asteroids[i][1] = random(6, (gb.display.height()-5));
     }
 }
 
@@ -67,20 +68,25 @@ void loop()
     }
 
     //ASTEROIDS
-    //refaire apparaître un astéroide quand il arrive au bout de l'écran
-    if(ast_pos_x + 5 < 0){
-      ast_pos_x = gb.display.width();
+    //refaire apparaître l'astéroide quand il arrive au bout de l'écran
+    
+      //ast_pos_x = gb.display.width();
       for(int i = 0; i < 2; i++){
-        asteroids[i][0] = random(6, (gb.display.height()-5));
-        gb.display.drawRect(ast_pos_x, asteroids[i][0], ast_size, ast_size);
+        if(asteroids[i][0] + 5 < 0){
+          asteroids[i][0] = random(gb.display.width(), (gb.display.width() +5));
+          asteroids[i][1] = random(6, (gb.display.height()-5));
+          gb.display.drawRect(asteroids[i][0], asteroids[i][1], ast_size, ast_size);
+        }
       }
-    }
 
     //Astéroides : Apparaissent de façon aléatoire de 0(+5 dimensions) à 69(-5) et se dirigent à une speed_x de -1
     for(int i = 0; i < 2 ; i++){
-      gb.display.drawRect(ast_pos_x, asteroids[i][0], ast_size, ast_size);    
+      gb.display.drawRect(asteroids[i][0], asteroids[i][1], ast_size, ast_size);
     }
-    ast_pos_x = ast_pos_x - 1;
+    for(int i = 0; i < 2; i++){
+       asteroids[i][0] = asteroids[i][0] -1;
+    }
+    
 
     //collision entre ship & asteroide
     bool crash = gb.collide.rectRect(ship_pos_x, ship_pos_y, 5, 5, ast_pos_x, ast_pos_y, ast_size, ast_size);
