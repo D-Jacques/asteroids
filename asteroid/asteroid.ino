@@ -7,6 +7,7 @@ int ship_pos_y = 35;
 //infos asteroides
 int asteroids[3][4];
 int last_pos_y;
+int vitesse = 1;
 
 //etat vaisseau
 bool vaisseau = true;
@@ -34,8 +35,10 @@ void setup()
     //asteroids[i][1] correspond à la position Y
     asteroids[i][1] = random(6, (gb.display.height() - 5));
     //gérer la superposition
-    while (asteroids[i][1] >= last_pos_y && asteroids[i][1] <= last_pos_y + asteroids[i][3]) {
-      asteroids[i][1] = random(6, (gb.display.height() - 5));
+    //for (int j = i + 1; j < 3 - 1; j++) {}
+    while (asteroids[i][1] >= last_pos_y && asteroids[i][1] <= (last_pos_y + asteroids[i][3])) {
+      //gb.collide.rectRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3], asteroids[j][0], asteroids[j][1], asteroids[j][2], asteroids[j][3])
+      asteroids[i][1] = random(6, (gb.display.height() - asteroids[i][3]));
     }
     last_pos_y = asteroids[i][1];
   }
@@ -123,6 +126,15 @@ void loop()
         gb.display.print(score);
         score = score + 1;
 
+        switch (score) {
+          case 1000:
+            vitesse++;
+            break;
+          case 2000:
+            vitesse++;
+            break;
+        }
+
         //ASTEROIDES
         gb.display.setColor(BROWN);
         for (int i = 0; i < 3; i++) {
@@ -133,18 +145,17 @@ void loop()
             asteroids[i][0] = random(gb.display.width(), (gb.display.width() + 10));
             asteroids[i][1] = random(6, (gb.display.height() - asteroids[i][3]));
             //eviter la superposition entre deux asteroides
-            //for (int j = i + 1; j < 3 - 1; j++) {
             while (asteroids[i][1] >= last_pos_y && asteroids[i][1] <= (last_pos_y + asteroids[i][3])) {
               //gb.collide.rectRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3], asteroids[j][0], asteroids[j][1], asteroids[j][2], asteroids[j][3])
               asteroids[i][1] = random(6, (gb.display.height() - asteroids[i][3]));
             }
-            //}
             gb.display.drawRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3]);
             last_pos_y = asteroids[i][1];
           }
           //faire apparaitre les asteroides de façon aleatoire de 0(+ random dimensions) à 69 et se dirigent a une vitesse de -1
           gb.display.drawRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3]);
-          asteroids[i][0] = asteroids[i][0] - 1;
+
+          asteroids[i][0] = asteroids[i][0] - vitesse;
 
           //collision entre vaisseau et astéroide
           if (gb.collide.rectRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3], ship_pos_x, ship_pos_y, 5, 5)) {
@@ -156,9 +167,11 @@ void loop()
               highscore = score;
             }
             score = 0;
+            vitesse = 1;
             ecran = MAIN;
             vaisseau = false;
           }
+
         }
       }
       break;
