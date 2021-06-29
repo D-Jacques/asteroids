@@ -122,10 +122,12 @@ void loop()
         }
 
         //score qui s'incremente de 1 tant qu'il n'y a pas de collisions entre un asteroide et le joueur
+        gb.display.setColor(WHITE);
         gb.display.print("score : ");
         gb.display.print(score);
         score = score + 1;
 
+        //augmenter la rapidite selon le score
         switch (score) {
           case 1000:
             vitesse++;
@@ -154,7 +156,6 @@ void loop()
           }
           //faire apparaitre les asteroides de façon aleatoire de 0(+ random dimensions) à 69 et se dirigent a une vitesse de -1
           gb.display.drawRect(asteroids[i][0], asteroids[i][1], asteroids[i][2], asteroids[i][3]);
-
           asteroids[i][0] = asteroids[i][0] - vitesse;
 
           //collision entre vaisseau et astéroide
@@ -171,7 +172,6 @@ void loop()
             ecran = MAIN;
             vaisseau = false;
           }
-
         }
       }
       break;
